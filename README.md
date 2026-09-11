@@ -19,6 +19,6 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 ### Prácticas
 
 1. Sesión 2 (semana 14 / septiembre)
-    * [Práctica Git](practicas/01-tds-git.pdf)
-    * [Video previo Git: configuración repo y acceso](practicas/acceso-a-github.mkv)
-    * [Libro : Pragmatic Guide to Git](practicas/pragmatic-guide-to-git.pdf) 
+    * [Práctica Git](practicas/01-git/01-tds-git.pdf)
+    * [Video previo Git: configuración repo y acceso](practicas/01-git/acceso-a-github.mkv)
+    * [Libro : Pragmatic Guide to Git](practicas/01-git/pragmatic-guide-to-git.pdf) 
