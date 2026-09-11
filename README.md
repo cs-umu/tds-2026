@@ -16,6 +16,10 @@ En este repositorio se publicará la información relativa al seguimiento de la 
     * [Presentación de la asignatura](teoria/transparencias/00-tds-presentacion.pdf)
     * [Tema 1: Introducción - Transparencias](teoria/transparencias/01-tds-introduccion.pdf) 
 
+2. Sesión 2 (semana 14 / septiembre)
+   * [Tema 1: Introducción - Transparencias](teoria/transparencias/01-tds-introduccion.pdf)
+   * [Tema 2: Principios básicos de la OO - Transparencias](teoria/transparencias/02-tds-principios_oo.pdf) 
+
 ### Prácticas
 
 1. Sesión 2 (semana 14 / septiembre)
