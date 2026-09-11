@@ -12,6 +12,13 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 
 ### Sesiones
 
-1. Sesión 1 (semana 07 / enero)
+1. Sesión 1 (semana 07 / septiembre)
     * [Presentación de la asignatura](teoria/transparencias/00-tds-presentacion.pdf)
     * [Tema 1: Introducción - Transparencias](teoria/transparencias/01-tds-introduccion.pdf) 
+
+### Prácticas
+
+1. Sesión 2 (semana 14 / septiembre)
+    * [Práctica Git](practicas/01-tds-git.pdf)
+    * [Video previo Git: configuración repo y acceso](practicas/acceso-a-github.mkv)
+    * [Libro : Pragmatic Guide to Git](practicas/pragmatic-guide-to-git.pdf) 
