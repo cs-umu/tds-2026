@@ -28,3 +28,7 @@ En este repositorio se publicará la información relativa al seguimiento de la 
     * [Práctica Git](practicas/01-git/01-tds-git.pdf)
     * [Video previo Git: configuración repo y acceso](practicas/01-git/acceso-a-github.mkv)
     * [Libro : Pragmatic Guide to Git](practicas/01-git/pragmatic-guide-to-git.pdf) 
+
+1. Sesión 3 (semana 21 / septiembre)
+    * [Práctica Maven](practicas/02-maven/01-tds-maven.pdf)
+    * [Whitepaper : Maven by example](https://www.sonatype.com/resources/guides/maven-by-example) 
