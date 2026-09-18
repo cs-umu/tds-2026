@@ -21,6 +21,10 @@ En este repositorio se publicará la información relativa al seguimiento de la 
    * [Tema 2: Principios básicos de la OO - Transparencias](teoria/transparencias/02-tds-principios_oo.pdf)
    * [Apuntes sobre DDD (enlazado con el recurso de PDS)](https://github.com/cs-umu/pds-2026/blob/main/teoria/apuntes/ddd.pdf)) 
 
+3. Sesión 3 (semana 21 / septiembre)
+   * [Tema 2: Principios básicos de la OO - Transparencias](teoria/transparencias/02-tds-principios_oo.pdf)
+   * [Apuntes sobre DDD (enlazado con el recurso de PDS)](https://github.com/cs-umu/pds-2026/blob/main/teoria/apuntes/ddd.pdf)) 
+
 ### Prácticas
 
 1. Sesión 2 (semana 14 / septiembre)
