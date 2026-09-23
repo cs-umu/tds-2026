@@ -34,5 +34,5 @@ En este repositorio se publicará la información relativa al seguimiento de la 
     * [Libro : Pragmatic Guide to Git](practicas/01-git/pragmatic-guide-to-git.pdf) 
 
 1. Sesión 3 (semana 21 / septiembre)
-    * [Práctica Maven](practicas/02-maven/01-tds-maven.pdf)
+    * [Práctica Maven](practicas/02-maven/02-tds-maven.pdf)
     * [Whitepaper : Maven by example](https://www.sonatype.com/resources/guides/maven-by-example) 
