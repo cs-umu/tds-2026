@@ -44,6 +44,6 @@ En este repositorio se publicará la información relativa al seguimiento de la 
     * [Taller Requisitos](practicas/03-requisitos/03-tds-taller-requisitos.pdf)
     * [Enunciados para el taller](practicas/03-requisitos/03-tds-enunciados-requisitos-modelado.pdf)
   
-## Proyecto
+## Proyecto
 
 [Enunciado del proyecto: Gestión de Gastos](proyecto/03-requisitos/tds-proyecto-gestion-gastos.pdf)
