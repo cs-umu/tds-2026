@@ -47,7 +47,7 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 4. Sesión 5 (semana 5 / octubre)
     * [Taller Modelado](practicas/04-modelado/04-tds-modelado.pdf)
     * [Enunciados para el taller](practicas/04-modelado/04-tds-enunciados-requisitos-modelado.pdf)
-    * [Herramienta Astah 7.2.0] (practicas/04-modelado/astah-community-7_2_0/)
+    * [Herramienta Astah 7.2.0](practicas/04-modelado/astah-community-7_2_0/)
 
   
 ## Proyecto
