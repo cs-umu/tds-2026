@@ -28,7 +28,7 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 4. Sesión 4 (semana 28 / septiembre)
    * [Ejercicios GRASP](ejercicios/01-ejercicios-grasp.pdf)
 
-### Prácticas
+## Prácticas
 
 1. Sesión 2 (semana 14 / septiembre)
     * [Presentación de las prácticas](practicas/00-tds-introduccion-practicas.pdf)
@@ -37,9 +37,13 @@ En este repositorio se publicará la información relativa al seguimiento de la 
     * [Libro : Pragmatic Guide to Git](practicas/01-git/pragmatic-guide-to-git.pdf) 
 
 2. Sesión 3 (semana 21 / septiembre)
-    * [Práctica Maven](practicas/02-maven/01-tds-maven.pdf)
+    * [Práctica Maven](practicas/02-maven/02-tds-maven.pdf)
     * [Whitepaper : Maven by example](https://www.sonatype.com/resources/guides/maven-by-example) 
 
 3. Sesión 4 (semana 28 / septiembre)
     * [Taller Requisitos](practicas/03-requisitos/03-tds-taller-requisitos.pdf)
-    * [Enunciados para el taller](practicas/03-requisitos/03-tds-enunciados-requisitos-modelado.pdf) 
+    * [Enunciados para el taller](practicas/03-requisitos/03-tds-enunciados-requisitos-modelado.pdf)
+  
+## Proyecto
+
+[Enunciado del proyecto: Gestión de Gastos](proyecto/03-requisitos/tds-proyecto-gestion-gastos.pdf)
