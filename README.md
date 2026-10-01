@@ -43,6 +43,12 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 3. Sesión 4 (semana 28 / septiembre)
     * [Taller Requisitos](practicas/03-requisitos/03-tds-taller-requisitos.pdf)
     * [Enunciados para el taller](practicas/03-requisitos/03-tds-enunciados-requisitos-modelado.pdf)
+
+4. Sesión 5 (semana 5 / octubre)
+    * [Taller Modelado](practicas/04-modelado/04-tds-modelado.pdf)
+    * [Enunciados para el taller](practicas/04-modelado/04-tds-enunciados-requisitos-modelado.pdf)
+    * [Herramienta Astah 7.2.0] (practicas/04-modelado/astah-community-7_2_0/)
+
   
 ## Proyecto
 
