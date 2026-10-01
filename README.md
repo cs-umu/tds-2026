@@ -10,6 +10,7 @@ En este repositorio se publicará la información relativa al seguimiento de la 
    * [Transparencias tema 1](teoria/transparencias/01-tds-introduccion.pdf)
 2. Tema 2: Principios básicos de la OO
    * [Transparencias tema 2](teoria/transparencias/02-tds-principios_oo.pdf)
+   * [Ejercicios GRASP](ejercicios/01-ejercicios-grasp.pdf)
 3. Tema 3: Algunos conceptos avanzados de programación orientadaa objetos
    * [Transparencias tema 3](teoria/transparencias/03-tds-conceptos_oo.pdf)
 
