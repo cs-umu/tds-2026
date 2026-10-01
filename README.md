@@ -8,6 +8,11 @@ En este repositorio se publicará la información relativa al seguimiento de la 
    * [Transparencias de presentación](teoria/transparencias/00-tds-presentacion.pdf)
 1. Tema 1: Introducción
    * [Transparencias](teoria/transparencias/01-tds-introduccion.pdf)
+2. Tema 2: Principios básicos de la OO
+   * [Transparencias](teoria/transparencias/02-tds-principios_oo.pdf)
+3. Tema 3: Algunos conceptos avanzados de programación orientadaa objetos
+   * [Transparencias](teoria/transparencias/03-tds-conceptos_oo.pdf)
+
    
 
 ### Sesiones
