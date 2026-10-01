@@ -28,6 +28,9 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 4. Sesión 4 (semana 28 / septiembre)
    * [Ejercicios GRASP](ejercicios/01-ejercicios-grasp.pdf)
 
+5. Sesión 5 (semana 05 / octubre)
+   * [Tema 3: Algunos conceptos avanzados de programación orientadaa objetos](teoria/transparencias/03-tds-conceptos_oo.pdf)
+
 ## Prácticas
 
 1. Sesión 2 (semana 14 / septiembre)
