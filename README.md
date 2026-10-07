@@ -58,6 +58,12 @@ En este repositorio se publicará la información relativa al seguimiento de la 
     * [Enunciados para el taller](practicas/04-modelado/04-tds-enunciados-requisitos-modelado.pdf)
     * [Herramienta Astah 7.2.0](practicas/04-modelado/astah-community-7_2_0/)
 
+5. Sesión 6 (asíncrona - offline)
+    * [Práctica Depuración](practicas/05-depuracion/05-tds-depuracion.pdf)
+    * [Práctica Logging](practicas/05-depuracion/05-tds-log.pdf)
+    * [Ejemplo 1 Depuración](practicas/05-depuracion/debugDemo.zip)
+    * [Ejemplo 2 Depuración](practicas/05-depuracion/concurrentDebugDemo.zip)
+    * [Ejemplo 3 Log](practicas/05-depuracion/logDemo.zip)
   
 ## Proyecto
 
