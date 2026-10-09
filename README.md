@@ -67,4 +67,4 @@ En este repositorio se publicará la información relativa al seguimiento de la 
   
 ## Proyecto
 
-[Enunciado del proyecto: Gestión de Gastos](proyecto/03-requisitos/tds-proyecto-gestion-gastos.pdf)
+[Enunciado del proyecto: Gestión de Gastos](proyecto/tds-proyecto-gestion-gastos.pdf)
