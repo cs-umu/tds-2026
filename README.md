@@ -15,7 +15,9 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 3. Tema 3: Algunos conceptos avanzados de programación orientadaa objetos
    * [Transparencias tema 3](teoria/transparencias/03-tds-conceptos_oo.pdf)
    * [Ejercicios STREAMS 1](ejercicios/02-ejercicios-streams-1.pdf)
+   * [Ejercicios STREAMS 1 soluciones](ejercicios/02-ejercicios-streams-1-soluciones.pdf)
    * [Ejercicios STREAMS 2](ejercicios/02-ejercicios-streams-2.pdf)
+   * [Ejercicios STREAMS 2 Soluciones](ejercicios/02-ejercicios-streams-2-soluciones.pdf)
 4. Tema 4: Patrones de Diseño
    * [Patrones Creación](teoria/transparencias/04-tds-patrones_1_creacion.pdf)
    * [Patrones Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
