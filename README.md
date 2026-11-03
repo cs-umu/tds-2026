@@ -61,7 +61,6 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 10. Sesión 10 (semana 09 / noviembre)
    * [Tema 4: Patrones de Diseño - Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
 
-
 ## Prácticas
 
 1. Sesión 2 (semana 14 / septiembre)
