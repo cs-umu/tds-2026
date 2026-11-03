@@ -4,9 +4,16 @@
 
 Vais a implementar la interfaz de una aplicación para jugar a la lotería contra el PC, para ir practicando de cara a la lotería de Navidad. ¡Y en solo 10 pasos (del 0 al 9)!.
 
-Tenemos ya implementada la lógica de negocio de la aplicación. En la clase **ControladorAplicacionLoteria** tenemos 3 métodos públicos que podemos usar en nuestra interfaz:
+Tenemos ya implementada la lógica de negocio de la aplicación. En el modelo tenemos cuatro clases:
 
-* `public boolean participaEnSorteo(int boletoComprado)`: Método a ejecutar para simular un sorteo de lotería. Como argumento toma el número que hemos comprado, y nos devolverá _true_ si hemos ganado 'el gordo' (hemos acertado el número), _false_ en otro caso.
+* **NumeroLoteria**: Modela un número de la Lotería, entre 0 y 99999.
+* **PosicionDigito**: Modela las distintas posiciones que puede tener un dígito en el número. Nos servirá para extraer dígitos concretos de _NumeroLoteria_.
+* **Sorteo**: Modela un sorteo de la Lotería. Incluye un método factoría para su generación, y nos indicará si un determinado número ha sido premiado.
+* **HistoricoSorteos**: Almacena los números premiados. Nos permitirá realizar estadísticas sobre sorteos pasados.
+
+Además, tenemos ya el controlador de la aplicación, la clase **ControladorAplicacionLoteria**, con tres métodos que podemos llamar desde nuestros manejadores de vista:
+
+* `public boolean participaEnSorteo(int boletoComprado)`: Método a ejecutar para simular un sorteo de lotería. Como argumento toma el número que hemos comprado, generará un sorteo y nos devolverá _true_ si hemos ganado 'el gordo' (hemos acertado el número), _false_ en otro caso.
 
 * `public int getUltimoNumeroPremiado()`: Nos devolverá el número que salió premiado en el último sorteo (e.d. el que se generó tras llamar a `participaEnSorteo()`).
 
@@ -14,138 +21,217 @@ Tenemos ya implementada la lógica de negocio de la aplicación. En la clase **C
 
 Además, para poder interactuar con el controlador tenemos que usar el método estático **getInstancia()**, que nos devolverá una instancia del mismo.
 
-El código de la clase es el siguiente (copiadlo y crear la clase en vuestro proyecto Eclipse):
+## Paso 0 - Crear el modelo y el controlador
+
+En primer lugar tenemos que crear un nuevo proyecto Maven como de costumbre, o bien reutilizar el proyecto con las pruebas que hemos estado usando en clase. El código que hay de ejemplo está pensado para colocarlo con el paquete `umu.tds.loteria` como raíz, por lo que si hacemos el proyecto de desde 0, podemos poner como groupId `umu.tds` y como artifactId `loteria`. O si reutilizamos un proyecto ya creado, podemos crear la estructura de paquetes `umu.tds.loteria`.
+
+Posteriormente, creamos los paquetes y clases para el modelo y el controlador. Para ello:
+
+- Creamos el paquete para el modelo, por ejemplo `umu.tds.loteria.modelo`
+
+- Creamos y guardamos las cuatro clases, cuyo código es el siguiente:
+
 
 ```java
-package org.umu;
+package umu.tds.loteria.modelo;
 
-import java.util.HashMap;
-import java.util.Map;
+/** Posiciones de un número de lotería de 5 cifras. */
+public enum PosicionDigito {
+    UNIDADES(0), DECENAS(1), CENTENAS(2), UNIDADES_MILLAR(3), DECENAS_MILLAR(4);
 
-/**
- * Controlador a usar para el ejemplo del boletín extra de JavaFX
- * 
- */
-public class ControladorAplicacionLoteria {
+    private final int idx;
 
-	/** 
-	 * Enumeración con las distintas posiciones del boleto 
-	 */
-	public enum PosicionDigito {
-		UNIDADES(0), DECENAS(1), CENTENAS(2), UNIDADES_MILLAR(3), DECENAS_MILLAR(4);
+    PosicionDigito(int idx) { this.idx = idx; }
 
-		int idx;	    
-		PosicionDigito(int idx) {
-			this.idx = idx;
-		}
+    public int getIdx() { return idx; }
 
-		public int getIdx() { return idx;}	    
-	};
-
-	/**
-	 * Estructura que almacenará el número de veces que ha salido cada número en cada posición 
-	 */
-	private Map<PosicionDigito,Map<Integer,Integer>> historico;
-
-	/**
-	 * Instancia del controlador
-	 */
-	private static ControladorAplicacionLoteria instancia;
-	
-	/**
-	 * Almacena el número premiado en el último sorteo
-	 */
-	private int ultimoNumeroPremiado;
-
-	/**
-	 * Método para obtener la instancia del controlador
-	 * @return Instancia del controlador
-	 */
-	public static ControladorAplicacionLoteria getInstancia() {
-		if (instancia==null) {
-			instancia = new ControladorAplicacionLoteria();
-		}
-		return instancia;
-	}
-	
-	/**
-	 * Simula un sorteo de lotería.
-	 * @param boletoComprado Boleto con el que se participa en este sorteo
-	 * @return True si ha habido suerte y el boleto comprado coincide con el número premiado. False en otro caso
-	 */
-	public boolean participarEnSorteo(int boletoComprado) {
-		ultimoNumeroPremiado = generaNumeroPremiado();
-		this.guardarParaEstadisticas(ultimoNumeroPremiado);
-		
-		return (boletoComprado == ultimoNumeroPremiado);
-	}
-	
-	/**
-	 * Devuelve el número que ha salido en el último sorteo
-	 * @return
-	 */
-	public int getUltimoNumeroPremiado() {
-		return ultimoNumeroPremiado;
-	}
-	
-	/**
-	 * Nos devuelve el número de veces que ha salido un determinado dígito (0-9) en una determinada posición
-	 * @param posicion Posición por la que estamos preguntando (unidades, decenas, etc.)
-	 * @param digito Dígito por el que estamos preguntando (0-9). Importante: ha de estar entre 0 y 9
-	 * @return
-	 */
-	public int getNumVecesValorEnPosicion(PosicionDigito posicion, int digito) {
-		return historico.get(posicion).get(digito);
-	}
-	
-	/**
-	 * Genera un número aleatorio de cinco cifras usando una "fórmula mágica"
-	 * @return Número de 5 cifras
-	 */
-	private int generaNumeroPremiado() {
-		java.util.Random random = new java.util.Random();
-		int numeroPremiado = 0;
-		for (int i = 0; i<5;i++) {
-			double aux = random.nextGaussian()*0.5+i+1;
-			int auxInt = (int) Math.round(aux);
-			int dig = Math.max(0, Math.min(9, auxInt));
-			numeroPremiado = numeroPremiado + dig*(int)Math.pow(10,i);
-		}
-		return numeroPremiado;
-	}
-
-	/**
-	 * Constructor privado
-	 */
-	private ControladorAplicacionLoteria() {
-		// Inicializamos la estructura para guardar los datos históticos
-		historico = new HashMap<>();
-		for (PosicionDigito posicion : PosicionDigito.values()) {
-			Map<Integer,Integer> valores = new HashMap<>();			 
-			for (int i = 0; i<10;i++) {
-				valores.put(i, 0);
-			}
-			historico.put(posicion, valores);
-		}		 
-	}
-
-	/**
-	 * Guarda internamente las veces que ha aparecido cada número (0-9) en cada posición del boleto premiado
-	 * @param numero
-	 */
-	private void guardarParaEstadisticas(int numero) {
-		for (PosicionDigito pos : PosicionDigito.values()) {
-			int digito =  (numero / (int) Math.pow(10, pos.getIdx())) % 10;
-			Map<Integer,Integer> conteoPorNumero = historico.get(pos);
-			conteoPorNumero.put(digito, conteoPorNumero.get(digito)+1);			 
-		}		 
-	}
+    /** Peso de la posición: 1, 10, 100, 1000, 10000. */
+    public int getPeso() { return (int) Math.pow(10, idx); }
 }
 ```
 
-## Paso 0 - Crear y guardar el controlador
+```java
+package umu.tds.loteria.modelo;
 
-La clase controladora anterior la podemos crear y guardar en un paquete que la identifique. Por ejemplo, si nuestro proyecto está en umu.tds, la estructura completa podría ser la siguiente:
+/** Número de lotería de 5 cifras (00000 - 99999). */
+public class NumeroLoteria {
+
+    public static final int MAXIMO = 99999;
+
+    private int valor;
+
+    public NumeroLoteria(int valor) {
+        if (valor < 0 || valor > MAXIMO) {
+            throw new IllegalArgumentException("Número fuera de rango (0-" + MAXIMO + "): " + valor);
+        }
+        this.valor = valor;
+    }
+
+    public int getValor() {
+        return valor;
+    }
+
+    /** Dígito (0-9) que ocupa la posición indicada. */
+    public int getDigito(PosicionDigito posicion) {
+        return (valor / posicion.getPeso()) % 10;
+    }
+
+	@Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof NumeroLoteria)) return false;
+        return valor == ((NumeroLoteria) obj).getValor();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(valor);
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format("%05d", valor);
+    }
+}
+```
+
+```java
+package umu.tds.loteria.modelo;
+
+import java.util.Random;
+
+/** Un sorteo celebrado. Se crea con su número premiado y es inmutable. */
+public class Sorteo {
+
+    private NumeroLoteria numeroPremiado;
+
+	/** Solo se crean sorteos a través de celebrar(). */
+    private Sorteo(NumeroLoteria numeroPremiado) {
+        if (numeroPremiado == null) {
+            throw new IllegalArgumentException("El número premiado no puede ser nulo");
+        }
+        this.numeroPremiado = numeroPremiado;
+    }
+
+    public static Sorteo celebrar() {
+    	Random random = new Random();
+        int numero = 0;
+        for (PosicionDigito pos : PosicionDigito.values()) {
+            double aux = random.nextGaussian() * 0.5 + pos.getIdx() + 1;
+            int digito = Math.max(0, Math.min(9, (int) Math.round(aux)));
+            numero += digito * pos.getPeso();
+        }
+        return new Sorteo(new NumeroLoteria(numero));
+    }
+
+    public NumeroLoteria getNumeroPremiado() {
+        return numeroPremiado;
+    }
+
+    /** True si el boleto coincide con el número premiado de este sorteo. */
+    public boolean haTocado(NumeroLoteria boleto) {
+        return numeroPremiado.equals(boleto);
+    }
+}
+```
+
+```java
+package umu.tds.loteria.modelo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/** Sorteos celebrados. Las estadísticas se calculan bajo demanda. */
+public class HistoricoSorteos {
+
+    private final List<Sorteo> sorteos = new ArrayList<>();
+
+	public void registrar(Sorteo sorteo) {
+	    if (sorteo == null) {
+	        throw new IllegalArgumentException("El sorteo no puede ser nulo");
+	    }
+	    sorteos.add(sorteo);
+	}
+
+    public Optional<Sorteo> getUltimoSorteo() {
+        return sorteos.isEmpty() ? Optional.empty() : Optional.of(sorteos.get(sorteos.size() - 1));
+    }
+
+    /** Veces que ha salido el dígito indicado (0-9) en la posición indicada. */
+    public int getFrecuencia(PosicionDigito posicion, int digito) {
+        if (digito < 0 || digito > 9) {
+            throw new IllegalArgumentException("El dígito debe estar entre 0 y 9: " + digito);
+        }
+        return (int) sorteos.stream()
+                .filter(s -> s.getNumeroPremiado().getDigito(posicion) == digito)
+                .count();
+    }
+
+    public int getNumSorteos() {
+        return sorteos.size();
+    }
+}
+```
+
+- Creamos el paquete para el controlador **umu.tds.loteria.controlador**.
+
+- Creamos allí la clase controlador. El código de la clase sería el siguiente:
+
+```java
+package umu.tds.loteria.controlador;
+
+import umu.tds.loteria.modelo.HistoricoSorteos;
+import umu.tds.loteria.modelo.NumeroLoteria;
+import umu.tds.loteria.modelo.PosicionDigito;
+import umu.tds.loteria.modelo.Sorteo;
+
+/** Controlador de la aplicación: fachada entre la interfaz y el modelo. */
+public class ControladorAplicacionLoteria {
+
+    private static ControladorAplicacionLoteria instancia;
+
+    private final HistoricoSorteos historico;
+
+    public static ControladorAplicacionLoteria getInstancia() {
+        if (instancia == null) {
+            instancia = new ControladorAplicacionLoteria();
+        }
+        return instancia;
+    }
+
+    private ControladorAplicacionLoteria() {
+        this.historico = new HistoricoSorteos();
+    }
+
+    /**
+     * Celebra un sorteo.
+     * @param boletoComprado Boleto con el que se participa (0 - 99999)
+     * @return True si el boleto coincide con el número premiado
+     */
+    public boolean participarEnSorteo(int boletoComprado) {
+        NumeroLoteria boleto = new NumeroLoteria(boletoComprado);  // valida antes de sortear
+        Sorteo sorteo = Sorteo.celebrar();
+        historico.registrar(sorteo);
+        return sorteo.haTocado(boleto);
+    }
+
+    /** Número premiado en el último sorteo celebrado. */
+    public int getUltimoNumeroPremiado() {
+        return historico.getUltimoSorteo()
+                .map(s -> s.getNumeroPremiado().getValor())
+                .orElseThrow(() -> new IllegalStateException("Aún no se ha celebrado ningún sorteo"));
+    }
+
+    /** Veces que ha salido un dígito (0-9) en una posición del número premiado. */
+    public int getNumVecesValorEnPosicion(PosicionDigito posicion, int digito) {
+        return historico.getFrecuencia(posicion, digito);
+    }
+}
+```
+
+La estructura completa de estos paquetes podría ser la siguiente:
 
 ```
 src/
@@ -153,13 +239,20 @@ src/
      └─ java/
          └─ umu/
              └─ tds/
-                 └─ controlador/
-                     └─ControladorAplicacionLoteria.java
+                 └─ loteria/
+                     ├─ modelo/
+                     |   ├─HistoricoSorteos.java
+                     |   ├─NumeroLoteria.java
+                     |   ├─PosicionDigito.java
+                     |   └─Sorteo.java
+                     |
+                     └─ controlador/
+                         └─ControladorAplicacionLoteria.java
 ```
 
 ## Paso 1 - Crear la clase principal para lanzar la aplicación
 
-Vamos a crear una clase para lanzar nuestra aplicación. La llamaremos **LoteriaApp.java** y, como va a servir para lanzar la apliación con la interfaz de JavaFX, la crearemos en un paquete llamado 'interfaz':
+Vamos a crear una clase para lanzar nuestra aplicación. La llamaremos **LoteriaApp.java** y, como va ser la clase con la que ejecutemos la aplicación, la dejaremos en el paquete **umu.tds.loteria**:
 
 ```
 src/
@@ -167,16 +260,26 @@ src/
      └─ java/
          └─ umu/
              └─ tds/
-                 └─ controlador/
-                 |  └─ControladorAplicacionLoteria.java
-                 └─ interfaz/
+                 └─ loteria/
+                     |
+                     ├─ modelo/
+                     |   ├─HistoricoSorteos.java
+                     |   ├─NumeroLoteria.java
+                     |   ├─PosicionDigito.java
+                     |   └─Sorteo.java
+                     |
+                     ├─ controlador/
+                     |   └─ControladorAplicacionLoteria.java
+                     |
                      └─ LoteriaApp.java
 ```
 
 El código de la clase será el típico de las clases con método 'main' visto hasta ahora. Podemos aprovechar para ejecutar un código de pruebas sobre el controlador para asegurarnos de que funciona (lo borraremos posteriormente cuando añadamos las ventanas):
 
 ```java
-import umu.tds.controlador.ControladorAplicacionLoteria;
+package umu.tds.loteria;
+
+import umu.tds.loteria.controlador.ControladorAplicacionLoteria;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -239,7 +342,7 @@ Recordad que en todo momento podemos simular cómo quedaría nuestra ventana con
 |:--:| 
 | Resultado al final del paso 1. El grafo de la escena quedará como se muestra en (a), para asignar los valores a los eventos On Action de los MenuItem se haría como se indica en (b), y el aspecto final de la ventana quedaría como se muestra en (c). |
 
-Para guardar nuestro fxml, recordad que se recomendaba hacerlo dentro de la carpeta 'resources' de nuestro proyecto, en una localización similar a donde vayamos a colocar las clases que accederán a la misma. Como esto lo vamos a llamar desde nuestro paquete _interfaz_ lo colocaremos en una carpeta con ese nombre dentro de resources. Podemos llamar a este fichero como **ventanaPrincipalLoteria.fxml**, quedando como sigue:
+Para guardar nuestro fxml, recordad que se recomendaba hacerlo dentro de la carpeta 'resources' de nuestro proyecto, en una localización similar a donde vayamos a colocar las clases que accederán a la misma. Vamos a crear un paquete nuevo para almacenar todo lo relacionado con la vista, al que podemos llamar **umu.tds.loteria.vista**. Por lo tanto, guardaremos nuestro fxml en una carpeta con ese nombre dentro de _resources_. Podemos llamar a este fichero como **ventanaPrincipalLoteria.fxml**, quedando como sigue:
 
 ```
 src/
@@ -247,22 +350,31 @@ src/
      ├─ java/
      |   └─ umu/
      |       └─ tds/
-     |           └─ controlador/
-     |           |  └─ControladorAplicacionLoteria.java
-     |           └─ interfaz/
+     |           └─ loteria/
+     |               |
+     |               ├─ modelo/
+     |               |   ├─HistoricoSorteos.java
+     |               |   ├─NumeroLoteria.java
+     |               |   ├─PosicionDigito.java
+     |               |   └─Sorteo.java
+     |               |
+     |               ├─ controlador/
+     |               |   └─ControladorAplicacionLoteria.java
+     |               |
      |               └─ LoteriaApp.java
      └─ resources/
           └─ umu/
               └─ tds/
-                  └─ interfaz/
-                      └─ ventanaPrincipalLoteria.fxml
+                  └─ loteria/
+                      └─ vista/
+                          └─ ventanaPrincipalLoteria.fxml
 ```
 
-## Paso 3 - Crear el controlador de la vista de la venana principal
+## Paso 3 - Crear el manejador de la vista de la ventana principal
 
 Como seguramente recordaréis, los archivos FXML requerían de una clase controladora. Como ya hemos definido los métodos 'on action' a los que queremos responder en ella, SceneBuilder nos puede ayudar a crearla. 
 
-En lugar de editar directamente el FXML como hicimos en otro ejemplo, podemos indicar el nombre de la clase controladora en la pestaña _Controller_ que hay en la parte inferior izquierda de la interfaz. Llamaremos a nuestra clase controladora como **umu.tds.interfaz.ControladorVistaVentanaPrincipal** (recordad que hay que poner el nombre canónico de la clase, es decir, con los paquetes a los que pertenece delante):
+Podemos indicar el nombre de la clase controladora en la pestaña _Controller_ que hay en la parte inferior izquierda de la interfaz. Llamaremos a nuestra clase controladora como **umu.tds.loteria.vista.ManejadorVistaVentanaPrincipal** (recordad que hay que poner el nombre canónico de la clase, es decir, con los paquetes a los que pertenece delante):
 
 | ![Configuración del controlador en SceneBuilder](./imagenes/boletinExtra/paso3_configuracionControlador.png) | 
 |:--:| 
@@ -274,7 +386,7 @@ Además, podemos ver un esqueleto del posible controlador con la opción del men
 |:--:| 
 | Código que genera SceneBuilder como esqueleto del controlador de presentación para nuestro panel. |
 
-Podemos crear nuestra clase **ControladorVistaVentanaPrincipal** en el paquete **interfaz** de nuestro proyecto y copiar el contenido. Podemos borrar los atributos _resources_ y _location_ ya que no los necesitaremos (así como los imports sobrantes).
+Podemos crear nuestra clase **ManejadorVistaVentanaPrincipal** en el paquete **vista** de nuestro proyecto y copiar el contenido. Podemos borrar los atributos _resources_ y _location_ ya que no los necesitaremos (así como los imports sobrantes).
 
 
 ```
@@ -283,16 +395,22 @@ src/
      ├─ java/
      |   └─ umu/
      |       └─ tds/
-     |           └─ controlador/
-     |           |  └─ ControladorAplicacionLoteria.java
-     |           └─ interfaz/
-     |              ├─ ControladorVistaVentanaPrincipal.java
-     |              └─ LoteriaApp.java
+     |           ├─ loteria/
+     |               ├─ modelo/
+     |               |  .....
+     |               ├─ controlador/
+     |               |  .....
+     |               ├─ vista/
+     |               |   └─ ManejadorVistaVentanaPrincipal.java
+     |               |
+     |               └─ LoteriaApp.java
+     |
      └─ resources/
-          └─ umu/
-              └─ tds/
-                  └─ interfaz/
-                      └─ ventanaPrincipalLoteria.fxml
+         └─ umu/
+             └─ tds/
+                 └─ loteria/
+                     └─ vista/
+                         └─ ventanaPrincipalLoteria.fxml
 ```
 
 Ya que vamos a cambiar el panel central dinámicamente, prepararemos la clase para hacerlo posteriormente. Crearemos dos atributos de tipo **Parent**, que es la clase de JavaFX de mayor nivel para identificar a un nodo contenedor. En el método _initialize_ crearemos dos paneles temporales para usarlos hasta que tengamos los finales:
@@ -302,7 +420,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-public class ControladorVistaVentanaPrincipal {
+public class ManejadorVistaVentanaPrincipal {
    	Parent panelJuego;
 	Parent panelEstadisticas;
 	
@@ -331,7 +449,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-public class ControladorVistaVentanaPrincipal {
+public class ManejadorVistaVentanaPrincipal {
 
     ....
 
@@ -366,7 +484,7 @@ public class LoteriaApp extends Application {
     ...
 	/** FIN DE CÓDIGO DE PRUEBAS **/
 	
-	FXMLLoader loader = new FXMLLoader(getClass().getResource("ventanaPrincipalLoteria.fxml"));
+	FXMLLoader loader = new FXMLLoader(getClass().getResource("/umu/tds/loteria/vista/ventanaPrincipalLoteria.fxml"));
     Scene scene = new Scene(loader.load(), 450, 350);
 	
     primaryStage.setTitle("Simulador de lotería");
@@ -406,7 +524,7 @@ Necesitaremos asignar los siguientes elementos para poder usarlos desde el contr
 
 1. En el **TextField** tendremos que asignar un valor a la propiedad _fx:id_ (apartado _Code_) para que podamos acceder a él desde el controlador y obtener el valor introducido por el usuario. Por ejemplo, podemos llamarlo **numeroTF**.
 2. En la propiedad _On Action_ del botón, pondremos un método al que se llamará para iniciar el sorteo. Podemos llamarlo como **jugarClicked**.
-3. En la propiedad _Controller class_ pondremos un nombre para el controlador. Recordad que ha de ser en forma canónica. Por ejemplo **umu.tds.interfaz.ControladorVistaPanelJuego**.
+3. En la propiedad _Controller class_ pondremos un nombre para el controlador. Recordad que ha de ser en forma canónica. Por ejemplo **umu.tds.loteria.vista.ManejadorVistaPanelJuego**.
 
 Lo restante a hacer en este paso sería cambiar tamaños a las etiquetas, al botón, etc., para intentar dejar el panel lo más estético posible. Algunos tips serían jugar con varias propiedades de _Layout_:
 - Propiedades _Valignment_ y _Halignment_ para colocar el componente en distintas posiciones dentro de una celda.
@@ -425,22 +543,28 @@ src/
      ├─ java/
      |   └─ umu/
      |       └─ tds/
-     |           └─ controlador/
-     |           |  └─ ControladorAplicacionLoteria.java
-     |           └─ interfaz/
-     |              ├─ ControladorVistaVentanaPrincipal.java
-     |              └─ LoteriaApp.java
+     |           └─ loteria/
+     |               ├─ modelo/
+     |               |  .....
+     |               ├─ controlador/
+     |               |  .....
+     |               ├─ vista/
+     |               |   └─ ManejadorVistaVentanaPrincipal.java
+     |               |
+     |               └─ LoteriaApp.java
+     |
      └─ resources/
-          └─ umu/
-              └─ tds/
-                  └─ interfaz/
-                      ├─ panelJuego.fxml
-                      └─ ventanaPrincipalLoteria.fxml
+         └─ umu/
+             └─ tds/
+                 └─ loteria/
+                     └─ vista/
+                         ├─ panelJuego.fxml                   
+                         └─ ventanaPrincipalLoteria.fxml
 ```
 
-## Paso 5 - Crear un controlador para el panel de juego
+## Paso 5 - Crear un manejador para el panel de juego
 
-De nuevo, podemos utilizar el "sample skeleton" generado para crear nuestro controlador **ControladorVistaPanelJuego**. Lo guardaremos en nuestro paquete java de la interfaz.
+De nuevo, podemos utilizar el "sample skeleton" generado para crear nuestro controlador **ManejadorVistaPanelJuego**. Lo guardaremos en nuestro paquete java de la interfaz.
 
 ```
 src/
@@ -448,18 +572,24 @@ src/
      ├─ java/
      |   └─ umu/
      |       └─ tds/
-     |           └─ controlador/
-     |           |  └─ ControladorAplicacionLoteria.java
-     |           └─ interfaz/
-     |              ├─ ControladorVistaPanelJuego.java
-     |              ├─ ControladorVistaVentanaPrincipal.java
-     |              └─ LoteriaApp.java
+     |           └─ loteria/
+     |               ├─ modelo/
+     |               |  .....
+     |               ├─ controlador/
+     |               |  .....
+     |               ├─ vista/
+     |               |   ├─ ManejadorVistaPanelJuego.java       
+     |               |   └─ ManejadorVistaVentanaPrincipal.java
+     |               |
+     |               └─ LoteriaApp.java
+     |
      └─ resources/
-          └─ umu/
-              └─ tds/
-                  └─ interfaz/
-                      ├─ panelJuego.fxml
-                      └─ ventanaPrincipalLoteria.fxml
+         └─ umu/
+             └─ tds/
+                 └─ loteria/
+                     └─ vista/
+                         ├─ panelJuego.fxml                   
+                         └─ ventanaPrincipalLoteria.fxml
 ```
 
 En este caso, vamos a realizar varias cosas. En primer lugar, el botón de jugar realizará las siguientes acciones:
@@ -469,7 +599,7 @@ En este caso, vamos a realizar varias cosas. En primer lugar, el botón de jugar
 El código del método quedaría así:
 
 ```java
-public class ControladorVistaPanelJuego {
+public class ManejadorVistaPanelJuego {
 ...
 
     @FXML
@@ -505,7 +635,7 @@ Sin embargo, en ningún momento comprobamos que lo que se introduce en el **Text
     void initialize() {
         assert numeroTF != null : "fx:id=\"numeroTF\" was not injected: check your FXML file 'panelJuego.fxml'.";
 
-        // Forzamos a que sólo se puedan introducir números en el campo de texto
+        // Forzamos a que solo se puedan introducir números en el campo de texto
         numeroTF.setTextFormatter(new TextFormatter<>(cambio -> {
             String nuevo = cambio.getControlNewText();
             return nuevo.matches("\\d{0,5}") ? cambio : null;
@@ -513,10 +643,10 @@ Sin embargo, en ningún momento comprobamos que lo que se introduce en el **Text
     }
 ```
 
-Lo siguiente sería mostrar el panel en nuestra aplicación. Para ello podemos modificar el método _intialize_ del controlador de la ventana principal (clase **ControladorVistaVentanaPrincipal**) para que, en lugar de usar el panel vacío que teníamos, cargue el que acabamos de hacer:
+Lo siguiente sería mostrar el panel en nuestra aplicación. Para ello podemos modificar el método _initialize_ del controlador de la ventana principal (clase **ManejadorVistaVentanaPrincipal**) para que, en lugar de usar el panel vacío que teníamos, cargue el que acabamos de hacer:
 
 ```java
-public class ControladorVistaVentanaPrincipal {
+public class ManejadorVistaVentanaPrincipal {
     ...
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -556,7 +686,7 @@ De la misma manera, podemos insertar una **BarChart** directamente sobre nuestro
 
 A pesar de no indicarlo claramente, la gráfica se crea con dos ejes: uno categórico y otro numérico (en el SceneBuilder aparecen ambos categóricos, pero es incorrecto). Podemos ver el detalle si revisamos el FXML generado:
 
-```java
+```xml
 <BarChart fx:id="grafica" layoutX="14.0" layoutY="23.0" prefHeight="298.0" prefWidth="299.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <xAxis>
         <CategoryAxis side="BOTTOM" />
@@ -572,7 +702,7 @@ A pesar de no indicarlo claramente, la gráfica se crea con dos ejes: uno categ�
 
 
 De nuevo, podemos utilizar varias opciones para organizar los componentes.  Si en el grafo de la escena o en el componente pulsamos con el botón derecho del ratón, tendremos algunas opciones interesantes que, junto con padding/margin pueden mejorar el aspecto final:
-- Fit to parent: Agranda el componente hasta llena todo el espacio permitido por el padre. Interesante para la gráfica y la tabla.
+- Fit to parent: Agranda el componente hasta llenar todo el espacio permitido por el padre. Interesante para la gráfica y la tabla.
 - Use computed sizes: Hace el contenedor lo más pequeño posible en funcion de lo que contiene. Interesante para usar en el HBox del encabezado.
 
 En las propiedades de la tabla también podemos cambiar el _Column Resize Policy_ a "constrained-resize" para que cambien de tamaño automáticamente.
@@ -586,12 +716,12 @@ Una posible vista final quedaría como sigue:
 
 Lo siguiente sería añadir las propiedades del apartado _code_ que necesitamos. Son las siguientes:
 
-- El fx:id para el combobox donde vamos a añadir las posiciones de cada numéro. Lo podemos llamar **comboPosicionCB**;
+- El fx:id para el combobox donde vamos a añadir las posiciones de cada número. Lo podemos llamar **comboPosicionCB**;
 - También tendremos que asignarle un "On Action" para que cuando cambie actualicemos los modelos de la tabla y la gráfica. Podemos llamarlo **comboPosicionChanged**
 - Necesitaremos también asignar fx:id al **TableView** para asignarle el modelo, y a cada uno de los **TableColumn** para poder manejarlos. Podemos llamarles **datosTV**, **nombreCol** y **frecuenciaCol** respectivamente.
-- También habrá que tener un fx:id para la gráfica y así cambiar sus dato. Podemos llamarlo **grafica**.
+- También habrá que tener un fx:id para la gráfica y así cambiar sus datos. Podemos llamarlo **grafica**.
 
-Por último indicaremos en el apartado _Controller_ que la clase controladora será **umu.tds.interfaz.ControladorVistaPanelEstadisticas**
+Por último indicaremos en el apartado _Controller_ que la clase controladora será **umu.tds.loteria.vista.ManejadorVistaPanelEstadisticas**
 
 Guardaremos el resultado en el mismo lugar que el resto de fxml, con el nombre de **panelEstadisticas.fxml**
 
@@ -602,36 +732,42 @@ src/
      ├─ java/
      |   └─ umu/
      |       └─ tds/
-     |           └─ controlador/
-     |           |  └─ ControladorAplicacionLoteria.java
-     |           └─ interfaz/
-     |              ├─ ControladorVistaPanelJuego.java
-     |              ├─ ControladorVistaVentanaPrincipal.java
-     |              └─ LoteriaApp.java
+     |           └─ loteria/
+     |               ├─ modelo/
+     |               |  .....
+     |               ├─ controlador/
+     |               |  .....
+     |               ├─ vista/
+     |               |   ├─ ManejadorVistaPanelJuego.java       
+     |               |   └─ ManejadorVistaVentanaPrincipal.java
+     |               |
+     |               └─ LoteriaApp.java
+     |
      └─ resources/
-          └─ umu/
-              └─ tds/
-                  └─ interfaz/
-                      ├─ panelEstadisticas.fxml
-                      ├─ panelJuego.fxml
-                      └─ ventanaPrincipalLoteria.fxml
+         └─ umu/
+             └─ tds/
+                 └─ loteria/
+                     └─ vista/
+                         ├─ panelEstadisticas.fxml
+                         ├─ panelJuego.fxml                   
+                         └─ ventanaPrincipalLoteria.fxml
 ```
 
-## Paso 7 - Crear un controlador para nuestra vista de estadísticas
+## Paso 7 - Crear un manejador para nuestra vista de estadísticas
 
-De nuevo, creamos una clase llamada **ControladorVistaPanelEstadisticas** en nuestro proyecto Eclipse y copiamos en ella el esqueleto que genera el SceneBuilder. 
+De nuevo, creamos una clase llamada **ManejadorVistaPanelEstadisticas** en nuestro proyecto Eclipse y copiamos en ella el esqueleto que genera el SceneBuilder. 
 
-Lo primero será rellenar los datos del ComboBox con las posiciones de los dígitos. Podemos emplear directamente el enumerado que hay creado en el controlador principal de la aplicación. También es necesario poner los tipos correspondientes en la declaración del componente:
+Lo primero será rellenar los datos del ComboBox con las posiciones de los dígitos. Podemos emplear directamente el enumerado _PosicionDigito_. También es necesario poner los tipos correspondientes en la declaración del componente:
 
 ### Modelo del combo box 
 
 ```java
-public class ControladorVistaPanelEstadisticas {
+public class ManejadorVistaPanelEstadisticas {
 
     ...
 
     @FXML // fx:id="comboPosicionCB"
-    private ComboBox<ControladorAplicacionLoteria.PosicionDigito> comboPosicionCB; // Value injected by FXMLLoader -- PONEMOS EL TIPO DE ELMENTOS QUE CONTIENE
+    private ComboBox<PosicionDigito> comboPosicionCB; // Value injected by FXMLLoader -- PONEMOS EL TIPO DE ELEMENTOS QUE CONTIENE
 
     ...
 
@@ -641,10 +777,10 @@ public class ControladorVistaPanelEstadisticas {
         assert datosTV != null : "fx:id=\"datosTV\" was not injected: check your FXML file 'panelEstadisticas.fxml'.";
         assert frecuenciaCol != null : "fx:id=\"frecuenciaCol\" was not injected: check your FXML file 'panelEstadisticas.fxml'.";
         assert grafica != null : "fx:id=\"grafica\" was not injected: check your FXML file 'panelEstadisticas.fxml'.";
-        assert nombreCol != null : "fx:id=\"nombreCol\" was not injected: check your FXML file 'panelEstadisticas.fxml'.";
+        assert numeroCol != null : "fx:id=\"numeroCol\" was not injected: check your FXML file 'panelEstadisticas.fxml'.";
 
         // Asignamos los items al combo box
-        comboPosicionCB.getItems().addAll(ControladorAplicacionLoteria.PosicionDigito.values());
+        comboPosicionCB.getItems().addAll(PosicionDigito.values());
         
     }
 
@@ -656,7 +792,7 @@ public class ControladorVistaPanelEstadisticas {
 Hay que indicar qué tipo de datos mostrará la tabla. Como vamos a mostrar pares de número - frecuencia (p. ej. "el número 0 ha salido 7 veces"), podemos utilizar la clase de conveniencia de JavaFX llamada **Pair**, que sirve para modelar un par de elementos cualquiera. Así pues, la tabla mostrará objetos de tipo **Pair\<Integer,Integer\>** y así habrá que indicarlo en la declaración del controlador. Del mismo modo, las columnas serán de tipo <Pair,Integer>:
 
 ```java
-public class ControladorVistaPanelEstadisticas {
+public class ManejadorVistaPanelEstadisticas {
 
     ...
 
@@ -666,8 +802,8 @@ public class ControladorVistaPanelEstadisticas {
     @FXML // fx:id="frecuenciaCol"
     private TableColumn<Pair<Integer,Integer>, Integer> frecuenciaCol; // Value injected by FXMLLoader
     
-    @FXML // fx:id="nombreCol"
-    private TableColumn<Pair<Integer,Integer>, Integer> nombreCol; // Value injected by FXMLLoader
+    @FXML // fx:id="numeroCol"
+    private TableColumn<Pair<Integer,Integer>, Integer> numeroCol; // Value injected by FXMLLoader
     ...
 }
 ```
@@ -680,7 +816,7 @@ También habrá que configurar los _CellValueFactory_ para cada columna, es deci
         ...
 
         // Datos para el Combo box
-        comboPosicionCB.getItems().addAll(ControladorAplicacionLoteria.PosicionDigito.values());
+        comboPosicionCB.getItems().addAll(PosicionDigito.values());
         
         // Configuración de las columnas de la tabla
         numeroCol.setCellValueFactory(new PropertyValueFactory<>("key"));
@@ -693,7 +829,7 @@ También habrá que configurar los _CellValueFactory_ para cada columna, es deci
 De igual manera, habría que indicar en la gráfica los tipos de datos de la misma en la declaración. En el eje X vamos a tener los números del 0 al 9, pero los trataremos de manera discreta y por tanto como categorías (los convertiremos a String), y en eje Y sí que tendremos valores numéricos:
 
 ```java
-public class ControladorVistaPanelEstadisticas {
+public class ManejadorVistaPanelEstadisticas {
 
     ...
 
@@ -706,7 +842,7 @@ public class ControladorVistaPanelEstadisticas {
 
 ### Actualización de los modelos
 
-Quedaría actualizar los modelos de la tabla y la gráfica. Esto lo cada vez que cambie el **ComboBox**, es decir, en el método _comboPosicionChanged_ que hemos creado. Para ello, en primer lugar pedimos al controlador principal de la aplicación que nos devuelva las veces que ha aparecido cada número en la posición seleccionada en el combo, y cremos una lista para ello
+Quedaría actualizar los modelos de la tabla y la gráfica. Esto lo haremos cada vez que cambie el **ComboBox**, es decir, en el método _comboPosicionChanged_ que hemos creado. Para ello, en primer lugar pedimos al controlador principal de la aplicación que nos devuelva las veces que ha aparecido cada número en la posición seleccionada en el combo, y creamos una lista para ello
 
 ```java
 @FXML
@@ -745,10 +881,10 @@ Quedaría actualizar los modelos de la tabla y la gráfica. Esto lo cada vez que
 
 ### Añadir el panel a la ventana principal
 
-Por último habría que mostrar el panel en nuestra aplicación. Para ello voveremos a  modificar el método _intialize_ del controlador de la ventana principal para que, en lugar de usar el panel vacío que teníamos, cargue el que acabamos de hacer:
+Por último habría que mostrar el panel en nuestra aplicación. Para ello volveremos a  modificar el método _initialize_ del controlador de la ventana principal para que, en lugar de usar el panel vacío que teníamos, cargue el que acabamos de hacer:
 
 ```java
-public class ControladorVistaVentanaPrincipal {
+public class ManejadorVistaVentanaPrincipal {
     ...
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -775,20 +911,27 @@ src/
      ├─ java/
      |   └─ umu/
      |       └─ tds/
-     |           └─ controlador/
-     |           |  └─ ControladorAplicacionLoteria.java
-     |           └─ interfaz/
-     |              ├─ ControladorVistaPanelJuego.java
-     |              ├─ ControladorVistaVentanaPrincipal.java
-     |              └─ LoteriaApp.java
+     |           └─ loteria/
+     |               ├─ modelo/
+     |               |  .....
+     |               ├─ controlador/
+     |               |  .....
+     |               ├─ vista/
+     |               |   ├─ ManejadorVistaPanelEstadisticas.java       
+     |               |   ├─ ManejadorVistaPanelJuego.java       
+     |               |   └─ ManejadorVistaVentanaPrincipal.java
+     |               |
+     |               └─ LoteriaApp.java
+     |
      └─ resources/
-          └─ umu/
-              └─ tds/
-                  └─ interfaz/
-                      ├─ panelEstadisticas.fxml
-                      ├─ panelJuego.fxml
-                      ├─ estilos.css
-                      └─ ventanaPrincipalLoteria.fxml
+         └─ umu/
+             └─ tds/
+                 └─ loteria/
+                     └─ vista/
+                         ├─ estilos.css
+                         ├─ panelEstadisticas.fxml
+                         ├─ panelJuego.fxml                   
+                         └─ ventanaPrincipalLoteria.fxml
 ```
 
 Podemos reutilizar el modo oscuro de otras prácticas:
@@ -823,7 +966,7 @@ Aunque también podemos añadir un caso "especial" para el botón que inicia el 
 }
 ```
 
-Para indicar que el botón de jugar tenga ese estilo tenemos que ponerle el identificador 'botonJugar' en su propiedad Id (OJO, es distinta de la fx:id que usábamos para el código). Lo modemos hacer desde el SceneBuilder. De hecho, podemos cargar la hoja de estilos y probarla añadiéndola con la opción _Preview --> Scene Style Sheets --> add Style Sheet_ y elegir el fichero que acabamos de crear.
+Para indicar que el botón de jugar tenga ese estilo tenemos que ponerle el identificador 'botonJugar' en su propiedad Id (OJO, es distinta de la fx:id que usábamos para el código). Lo podemos hacer desde el SceneBuilder. De hecho, podemos cargar la hoja de estilos y probarla añadiéndola con la opción _Preview --> Scene Style Sheets --> add Style Sheet_ y elegir el fichero que acabamos de crear.
 
 | ![Botón rojo paso 8](./imagenes/boletinExtra/paso8_estiloBoton.png) | 
 |:--:| 
@@ -842,7 +985,7 @@ public class LoteriaApp extends Application {
 
     Scene scene = new Scene(ventanaPrincipal, 450, 350);
     primaryStage.setTitle("Simulador de lotería");
-    scene.getStylesheets().add(getClass().getResource("estilos.css").toExternalForm());
+    scene.getStylesheets().add(getClass().getResource("/umu/tds/loteria/vista/estilos.css").toExternalForm());
     primaryStage.setScene(scene);
     primaryStage.show();
   }
