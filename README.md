@@ -58,6 +58,9 @@ En este repositorio se publicará la información relativa al seguimiento de la 
    * [Tema 4: Patrones de Diseño - Creacion](teoria/transparencias/04-tds-patrones_1_creacion.pdf)
    * [Tema 4: Patrones de Diseño - Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
 
+10. Sesión 10 (semana 09 / noviembre)
+   * [Tema 4: Patrones de Diseño - Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
+
 
 ## Prácticas
 
@@ -97,6 +100,9 @@ En este repositorio se publicará la información relativa al seguimiento de la 
    * [Práctica Arquitectura + JavaFX](practicas/06-arquitectura-javafx)
 
 8. Sesión 9 (semana 02 / noviembre)
+   * [Práctica Arquitectura + JavaFX](practicas/06-arquitectura-javafx)
+
+9. Sesión 10 (semana 09 / noviembre)
    * [Práctica Arquitectura + JavaFX](practicas/06-arquitectura-javafx)
 
     
