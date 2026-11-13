@@ -54,14 +54,14 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 8. Sesión 8 (semana 26 / octubre)
    * [Tema 4: Patrones de Diseño - Creacion](teoria/transparencias/04-tds-patrones_1_creacion.pdf)
 
-(9). Sesión 9 (semana 02 / noviembre)
+9 . Sesión 9 (semana 02 / noviembre)
    * [Tema 4: Patrones de Diseño - Creacion](teoria/transparencias/04-tds-patrones_1_creacion.pdf)
    * [Tema 4: Patrones de Diseño - Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
 
-(10). Sesión 10 (semana 09 / noviembre)
+10 . Sesión 10 (semana 09 / noviembre)
    * [Tema 4: Patrones de Diseño - Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
 
-(11). Sesión 11 (semana 16 / noviembre)
+11 . Sesión 11 (semana 16 / noviembre)
    * [Tema 4: Patrones de Diseño - Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
 
 ## Prácticas
