@@ -138,10 +138,13 @@ public class StockViewController {
 				if (button == guardarButtonType) {
 					try {
 						// FIXME: Violación del MVC
-						Producto producto = tablaProductos.getItems().get(tablaProductos.getItems().size() - 1);
+						int ultimoCodigo = tablaProductos.getItems().stream()
+								.mapToInt(producto -> Integer.parseInt(producto.getCodigo()))
+								.max()
+								.orElse(0);
 						double precio = Double.parseDouble(precioField.getText());
 						ProductoImpl productoImpl = new ProductoImpl(
-								String.format("%03d", Integer.parseInt(producto.getCodigo()) + 1),
+								String.format("%03d", ultimoCodigo + 1),
 								descripcionArea.getText(), cantidadSpinner.getValue(), precio);
 						tablaProductos.getItems().add(productoImpl);
 						controlador.nuevoProductoStock(productoImpl);

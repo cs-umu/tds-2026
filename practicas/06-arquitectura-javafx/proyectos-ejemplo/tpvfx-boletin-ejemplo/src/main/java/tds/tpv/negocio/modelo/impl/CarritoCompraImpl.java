@@ -25,10 +25,6 @@ public class CarritoCompraImpl implements CarritoCompra {
 		this.idCompra = id;
 	}
 
-	public void setItems(List<ItemImpl> items) {
-		this.items = items;
-	}
-
 	public void addItem(ItemImpl item) {
 		this.items.add(item);
 	}

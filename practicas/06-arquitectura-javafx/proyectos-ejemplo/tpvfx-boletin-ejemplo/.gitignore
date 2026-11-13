@@ -5,6 +5,9 @@
 # Log file
 *.log
 
+# SQLite database
+*.db
+
 # BlueJ files
 *.ctxt
 
@@ -28,3 +31,4 @@ replay_pid*
 .classpath
 .project
 .settings/
+/target/

@@ -5,7 +5,8 @@ module es.um.informatica.TpvFx {
 	requires com.google.common;
 	requires javafx.base;
 	requires javafx.graphics;
-	requires org.apache.logging.log4j; 
+	requires org.apache.logging.log4j;
+	requires java.sql;
  
     opens tds.tpv to javafx.fxml;
     opens tds.tpv.vista to javafx.fxml;

@@ -42,9 +42,9 @@ public class CompraRepositoryMemoryImpl implements CompraRepository {
 	}
 
 	@Override
-	public CarritoCompra findById(int id) throws ElementoNoEncontradoException { 
-		Optional<CarritoCompra> compra = compras.stream()
-				.filter( c -> c.getIdCompra().equals(id))
+	public CarritoCompra findById(String id) throws ElementoNoEncontradoException { 
+		Optional<? extends CarritoCompra> compra = getCompras().stream()
+				.filter(c -> c.getIdCompra().equals(id))
 				.findFirst();
 	
 		if (compra.isEmpty())

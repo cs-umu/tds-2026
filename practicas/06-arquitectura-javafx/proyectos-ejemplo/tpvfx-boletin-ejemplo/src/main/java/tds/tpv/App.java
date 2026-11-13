@@ -13,7 +13,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
     	// Inicialización
-    	Configuracion configuracion = new ConfiguracionImpl();
+    	Configuracion configuracion = new ConfiguracionSQLiteImpl();
         Configuracion.setInstancia(configuracion);
         configuracion.getSceneManager().inicializar(stage);
         

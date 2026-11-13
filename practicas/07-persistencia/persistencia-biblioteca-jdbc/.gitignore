@@ -1,0 +1,9 @@
+/bin/
+/target/
+
+# Base de datos SQLite generada al ejecutar
+*.db
+
+# Eclipse
+.classpath
+.settings/

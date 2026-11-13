@@ -23,7 +23,7 @@ public interface CompraRepository {
 	 * @return Compra
 	 */
 
-	CarritoCompra findById(int id) throws ElementoNoEncontradoException;
+	CarritoCompra findById(String id) throws ElementoNoEncontradoException;
 
 	/**
 	 * Aniade una compra 
