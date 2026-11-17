@@ -62,6 +62,7 @@ En este repositorio se publicará la información relativa al seguimiento de la 
 
 11. Sesión 11 (semana 16 / noviembre)
     * [Tema 4: Patrones de Diseño - Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
+    * [Ejercicios PATRONES](ejercicios/02-ejercicios-patrones.pdf)
 
 ## Prácticas
 
