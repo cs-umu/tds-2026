@@ -7,3 +7,4 @@
 # Eclipse
 .classpath
 .settings/
+/test-bin/
