@@ -22,6 +22,7 @@ En este repositorio se publicará la información relativa al seguimiento de la 
    * [Patrones Creación](teoria/transparencias/04-tds-patrones_1_creacion.pdf)
    * [Patrones Estructurales](teoria/transparencias/04-tds-patrones_2_estructurales.pdf)
    * [Patrones Comportamiento](teoria/transparencias/04-tds-patrones_3_comportamiento.pdf)
+   * [Ejercicios PATRONES](ejercicios/02-ejercicios-patrones.pdf)
 
 ### Sesiones
 
